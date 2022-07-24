@@ -1,7 +1,7 @@
 import psycopg2
 import dsn
 
-connection = psycopg2.connect(dsn.DSN)
+connection = psycopg2.connect(dsn.URI)
 
 cursor = connection.cursor()
 
