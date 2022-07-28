@@ -1,12 +1,15 @@
 from flask import Flask, redirect
 from flask_sqlalchemy import SQLAlchemy
 import dsn
+from migrate import Migrate
 
 hello_flask = Flask(__name__)
 hello_flask.config['SQLALCHEMY_DATABASE_URI'] = dsn.URI
 hello_flask.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # db is an interface for interacting with our database
 db = SQLAlchemy(hello_flask)
+
+migrate = Migrate(hello_flask, db)
 
 class Person(db.Model):
     __tableName__ = 'persons'
@@ -17,7 +20,7 @@ class Person(db.Model):
     def __repr__(self):
         return 'User id => {0} name {1}'.format(self.id, self.name)
 
-db.create_all()
+# db.create_all() since we use migration we don't need this again
 
 @hello_flask.route("/")
 def hello_world():
