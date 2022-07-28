@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To-do App</title>
+
+  <style>
+    html {
+      height: 100%;
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: rgb(82, 81, 81);
+      font-family: cursive, sans-serif, Verdana;
+    }
+
+    #main_title {
+      margin: 0 0 5px;
+    }
+
+    h1, h2, h3, h4, h5, h6, p{
+      margin: 0;
+      padding: 0;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .error {
+      width: 70%;
+      border: 3px solid rgb(137, 43, 43);
+      background-color: rgba(151, 72, 72, 0.9);
+      color: rgb(246, 241, 241);
+      padding: 1em;
+      margin: auto;
+      text-align: center;
+      border-radius: 37.5px;
+      box-shadow: 1px 2px 2px rgba(138, 116, 116, 0.5);
+      box-sizing: border-box;
+    }
+
+    .group_control {
+      border: 1px inset lightgray;
+      padding: 1em;
+    }
+    .list_items {
+      text-decoration: none;
+    }
+
+    li {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      margin: 5px 0;
+      contain: content;
+      border-bottom: 1px solid lightgrey;
+      padding: 4px 0;
+      box-sizing: border-box;
+    }
+    
+    .cancel {
+      position: absolute;
+      right: 0;
+      -webkit-appearance: none;
+      height: fit-content;
+      background-color: transparent;
+      cursor: pointer;
+      color: rgb(215, 101, 101);
+      font-size: small;
+      font-weight: bold;
+      outline: none;
+      border: none;
+      box-sizing: border-box;
+    }
+
+    #remove {
+      position: relative;
+    }
+
+    .group {
+      width: 50%;
+      display: flex;
+      flex-direction: row;
+      margin: 32px auto 0;
+      border-radius: 5px;
+      padding: 16px 32px;
+      box-shadow: 1px 1px 4px grey;
+      box-sizing: border-box;
+    }
+
+    .list {
+      flex: 2;
+    }
+
+    .task {
+      flex: 3;
+      display: flex;
+      flex-direction: column;
+      margin-left: 16px;
+      border-radius: 5px;
+      background-color: rgb(216, 213, 213);
+      box-shadow: 1px 1px 2px grey;
+      padding: 16px 32px;
+      box-sizing: border-box;
+    }
+
+    .group_t {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      margin-bottom: 8px;
+      box-sizing: border-box;
+    }
+
+    .group_t li {
+      width: 310px;
+      flex-direction: column;
+      border-bottom: 1px solid rgba(147, 155, 147, 0.25);
+    }
+
+    .group_t li div {
+      width: 100%;
+      display: flex;
+    }
+
+    li p {
+      flex: 1;
+      word-wrap: break-word;
+    }
+
+    .createdTime {
+      font-size: x-small;
+      font-weight: bold;
+      margin-left: 29px;
+    }
+
+    #rblock_form, #newtask_form {
+      display: flex;
+      position: relative;
+      align-items: center;
+      box-sizing: border-box;
+    }
+
+    #rename {
+      position: absolute;
+      cursor: pointer;
+      z-index: 10;
+      right: 2px;
+      width: 70px;
+      height: 28px;
+      margin-left: 4px;
+      border: 1px inset grey;
+      padding: 2px 4px;
+      border-radius: 15px;
+      background-color: black;
+      color: #ddd;
+      font-weight: bold;
+      box-sizing: border-box;
+    }
+
+    .renameInput, #description {
+      width: 200px;
+      height: 33px;
+      z-index: 0;
+      outline: none;
+      border: none;
+      border-radius: 15px;
+      padding: 0 74px 0 4px;
+      text-align: left;
+      box-sizing: border-box;
+    }
+
+    #description,  #newtask_form {
+      width: 100%;
+    }
+
+    .add_block_btn {
+      position: absolute;
+      cursor: pointer;
+      height: 28px;
+      width: 70px;
+      right: 2px;
+      margin-left: 4px;
+      border: 1px inset grey;
+      padding: 2px 4px;
+      border-radius: 15px;
+      background-color: black;
+      color: #ddd;
+      font-weight: bold;
+      box-sizing: border-box;
+    }
+
+    .group_t li div p {
+      flex: 1;
+      word-wrap: break-word;
+      margin-left: 8px;
+    }
+
+    .group_t:last-child {
+      margin-bottom: 0;
+    }
+
+    .spacebetween {
+      justify-content: space-between;
+    }
+
+    .group_t:last-child h4{
+      text-align: center;
+      margin: 0 auto;
+      cursor: pointer;
+    }
+
+    #search {
+      width: 100%;
+      height: 33px;
+      border: 1px inset lightgray;
+      border-radius: 5px;
+      padding: 0 8px;
+      font-weight: bold;
+      color: lightgrey;
+      box-sizing: border-box;
+    }
+
+    #category {
+      margin-bottom: 4px;
+    }
+
+    .cat_level {
+      cursor: pointer;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+  </style>
+</head>
+<body>
+  
+  <div class="container">
+    <form id="form"> 
+      <div class="group_control">
+        <!-- <label for="description">Add a new task</label>
+        <input type="text" name="description" id="description" required>
+        <input type="submit" value="Create"> -->
+      </div>
+    </form>
+    <div class="group">
+    <div class="list">
+      <h1 id="main_title">Lists</h1>
+      <div class="error hidden">Something went wrong.</div>
+      <h3><a href="#">Create a List</a></h3>
+      <ul class="todos">
+        {% for item in lists: %}
+          <li>
+            <a href="/todo/{{ item.id }}" class="cat_level listElement" data-listID="{{ item.id }}">{{ item.name }}</a>
+            <button class="delete_list cancel" data-id="{{ item.id }}">&cross;</button>
+          </li>
+        {% endfor %}  
+      </ul>
+    </div>
+    <div class="task">
+      <div class="group_t spacebetween">
+        <div class="gth">
+          {% if active_list.name == null: %} <h2>General</h2> {% endif %}
+          <h2 id="category">{{ active_list.name }}</h2>
+          <div id="rename_block">
+            <form id="rblock_form">
+              <input type="text" id="renameInput" class="renameInput" placeholder="Change list name" required>
+              <input type="text" id="hiddenActiveListId" value="{{ active_list.id }}" hidden>
+              <button id="rename" type="submit">Rename</button>
+            </form>
+          </div>
+        </div>
+        <div class="gth"><a href="#" id="show_addTask">Add Task</a></div>
+      </div>
+      <div class="group_t add_block hidden" id="new_taskBlock">
+        <form id="newtask_form">
+          <input type="text" id="description" placeholder="Enter new task here" required>
+          <input type="text" id="addInput" value="{{ active_list.id }}" hidden>
+          <input type="submit" value="Create" class="add_block_btn">
+        </form>
+      </div>
+      <div class="group_t">
+        <ul class="tasks">
+          {% for task in tasks: %}
+            <li id="remove">
+              <div>
+                <input type="checkbox" class="check_completed" data-id="{{ task.id}}" {% if task.completed %} checked {% endif %}>
+                <p>{{ task.description }}</p>
+              </div>
+              <button class="delete_task cancel" data-id="{{ task.id }}">&cross;</button>
+              <div><span class="createdTime">{{ task.createdTime[0:task.createdTime.rfind(".")] }}</span></div>
+            </li>
+          {% endfor %}  
+        </ul>
+      </div>
+      <div class="group_t"><h4>Complete All</h4></div>
+    </div>
+    </div>
+
+  </div>
+
+  <script>
+    'use strict';
+
+    const descInput = document.getElementById("description");
+    const newName = document.getElementById("renameInput");
+    const errorFlag = document.querySelector('.error');
+    const hiddenActiveListId = document.getElementById("hiddenActiveListId");
+    const addInputId = document.getElementById("addInput");
+    let list_id;
+
+    document.querySelectorAll(".listElement").forEach(lid => {
+      lid.addEventListener("click", (e) => {
+        list_id = e.target.dataset.listid;
+        //update category element
+      })
+
+    });
+      document.getElementById("newtask_form").onsubmit = (e) => {
+        // alert("Submitted!");
+        e.preventDefault();
+        //console.log(`List item selected id => ${list_id}`);
+        const desc = descInput.value;
+        list_id = addInputId.value;
+        // sending a AJAX request => async
+        fetch(`/todo/${list_id}/create_task`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            'description': desc     
+          })
+        })
+        .then((response) => {
+          return response.json();
+        })
+        .then((jsonResponse) => {
+          let liItem = document.createElement('li');
+          liItem.innerHTML = jsonResponse['description'];
+          document.querySelector('.tasks').appendChild(liItem);
+          errorFlag.classList.add("hidden");
+        })
+        .catch(() => {
+          errorFlag.classList.remove("hidden");
+        });
+      };
+
+      document.querySelectorAll(".check_completed").forEach(task_checkbox => {
+        task_checkbox.onchange = (e) => {
+          // console.log(`=======><=======\n${e.target.checked}=======><=======`);
+          const completedTask = e.target.checked;
+          const taskID = e.target.dataset.id;
+          // alert(taskID);
+          fetch(`/todo/${taskID}/set_completed`, {
+            method: 'POST',
+           headers: {
+             'Content-Type': 'application/json'
+           },
+           body: JSON.stringify({
+             'taskCompleted': completedTask
+           })
+          })
+          .then(() => {
+            errorFlag.classList.add("hidden");
+          })
+          .catch(() => {
+            errorFlag.classList.remove("hidden");
+          })
+        }
+      });
+
+      document.querySelectorAll(".delete_task").forEach(task => {
+        task.addEventListener("click", (e) => {
+        const taskID = e.target.dataset.id;
+          // Update view
+          e.target.parentElement.style.display = 'none';
+          // Send request to controller then controller inform the Model for Update
+          fetch(`/todo/${taskID}/delete_task`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          })
+          .then(() => {
+            errorFlag.classList.add("hidden");
+          })
+          .catch(() => {
+            errorFlag.classList.remove("hidden");
+          })
+        })
+      });
+
+      document.getElementById("rblock_form").onsubmit = (e) => {
+        // alert("Submitted!");
+        // e.preventDefault();
+        //console.log(`List item selected id => ${list_id}`);
+        const newName = renameInput.value;
+        const active_list_id = hiddenActiveListId.value;
+        // alert(active_list_id)
+        // sending a AJAX request => async
+        fetch(`/todo/${active_list_id}/rename_list`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            'newName': newName       
+          })
+        })
+        .then(() => {
+          document.getElementById("category").innerHTML = newName;
+          errorFlag.classList.add("hidden");
+        })
+        .catch(() => {
+          errorFlag.classList.remove("hidden");
+        });
+      };
+
+      document.getElementById("show_addTask").addEventListener("click", () => {
+        if (document.getElementById("new_taskBlock").classList.contains("hidden")) {
+          document.getElementById("new_taskBlock").classList.remove("hidden")
+        } else {
+          document.getElementById("new_taskBlock").classList.add("hidden")
+        }
+      });
+    
+  </script> 
+</body>
+</html>

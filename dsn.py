@@ -1,1 +1,0 @@
-DSN = 'dbname=postgres user=postgres password='
